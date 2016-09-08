@@ -21,10 +21,10 @@ public class ActuatorController {
 
     @Runner
     public void run() {
-        handleModeSelection();
+        handleExampleActuator();
     }
 
-    private void handleModeSelection() {
+    private void handleExampleActuator() {
         actuator.setInterlock(true);
 
         if (exampleControlDeskInterface.getForwardButton().isSet()) {
