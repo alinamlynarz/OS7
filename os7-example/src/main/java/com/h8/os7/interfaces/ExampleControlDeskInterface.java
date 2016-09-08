@@ -8,7 +8,7 @@ import com.h8.os7.core.input.type.InputType;
 import lombok.Getter;
 
 @Interface("controlDeskInterface")
-public class ControlDeskInterface {
+public class ExampleControlDeskInterface {
     @Input(type = InputType.I, address = @BitAddress(12.0))
     @Getter
     private BooleanInput forwardButton;

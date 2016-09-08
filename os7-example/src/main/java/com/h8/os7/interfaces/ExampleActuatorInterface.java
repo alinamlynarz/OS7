@@ -8,10 +8,11 @@ import com.h8.os7.core.input.type.InputType;
 import com.h8.os7.core.output.annotation.Output;
 import com.h8.os7.core.output.impl.BooleanOutput;
 import com.h8.os7.core.output.type.OutputType;
+import com.h8.os7.devices.ActuatorInterface;
 import lombok.Getter;
 
-@Interface("actuatorInterface")
-public class ActuatorInterface {
+@Interface("exampleActuatorInterface")
+public class ExampleActuatorInterface implements ActuatorInterface {
     @Input(type = InputType.I, address = @BitAddress(10.0))
     @Getter
     private BooleanInput minPosition;
