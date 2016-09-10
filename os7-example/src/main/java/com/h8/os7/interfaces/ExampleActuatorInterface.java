@@ -13,19 +13,19 @@ import lombok.Getter;
 
 @Interface("exampleActuatorInterface")
 public class ExampleActuatorInterface implements ActuatorInterface {
-    @Input(type = InputType.I, address = @BitAddress(10.0))
+    @Input(type = InputType.I, bitAddress = @BitAddress(10.0))
     @Getter
     private BooleanInput minPosition;
 
-    @Input(type = InputType.I, address = @BitAddress(10.1))
+    @Input(type = InputType.I, bitAddress = @BitAddress(10.1))
     @Getter
     private BooleanInput maxPosition;
 
-    @Output(type = OutputType.A, address = @BitAddress(10.0))
+    @Output(type = OutputType.A, bitAddress = @BitAddress(10.0))
     @Getter
     private BooleanOutput forwardMovement;
 
-    @Output(type = OutputType.A, address = @BitAddress(10.1))
+    @Output(type = OutputType.A, bitAddress = @BitAddress(10.1))
     @Getter
     private BooleanOutput backwardMovement;
 }
