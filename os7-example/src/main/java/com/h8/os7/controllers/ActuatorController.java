@@ -1,9 +1,10 @@
 package com.h8.os7.controllers;
 
 import com.h8.os7.core.common.annotation.component.Controller;
-import com.h8.os7.core.common.annotation.dependency.Create;
+import com.h8.os7.core.common.annotation.dependency.Instantiate;
 import com.h8.os7.core.common.annotation.dependency.Runner;
 import com.h8.os7.core.common.annotation.dependency.Use;
+import com.h8.os7.core.common.types.RunnerType;
 import com.h8.os7.devices.Actuator;
 import com.h8.os7.interfaces.ExampleActuatorInterface;
 import com.h8.os7.interfaces.ExampleControlDeskInterface;
@@ -16,24 +17,24 @@ public class ActuatorController {
     @Use
     ExampleControlDeskInterface exampleControlDeskInterface;
 
-    @Create
+    @Instantiate
     Actuator actuator = new Actuator(exampleActuatorInterface);
 
-    @Runner
+    @Runner(RunnerType.OB1)
     public void run() {
         handleExampleActuator();
     }
 
     private void handleExampleActuator() {
-        actuator.setInterlock(exampleActuatorInterface.getMovementLocked().isSet());
+        actuator.setInterlock(exampleActuatorInterface.getMovementLocked().get());
 
-        if (exampleControlDeskInterface.getForwardButton().isSet()) {
+        if (exampleControlDeskInterface.getForwardButton().get()) {
             actuator.moveForward();
         }
-        if (exampleControlDeskInterface.getBackwardButton().isSet()) {
+        if (exampleControlDeskInterface.getBackwardButton().get()) {
             actuator.moveBackward();
         }
-        if (exampleControlDeskInterface.getStopButton().isSet()) {
+        if (exampleControlDeskInterface.getStopButton().get()) {
             actuator.stop();
         }
     }

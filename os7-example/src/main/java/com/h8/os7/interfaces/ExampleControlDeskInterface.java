@@ -1,6 +1,6 @@
 package com.h8.os7.interfaces;
 
-import com.h8.os7.core.common.annotation.address.BitAddress;
+import com.h8.os7.core.common.annotation.address.Address;
 import com.h8.os7.core.common.annotation.component.Interface;
 import com.h8.os7.core.input.annotation.Input;
 import com.h8.os7.core.input.impl.BooleanInput;
@@ -9,15 +9,15 @@ import lombok.Getter;
 
 @Interface("controlDeskInterface")
 public class ExampleControlDeskInterface {
-    @Input(type = InputType.I, bitAddress = @BitAddress(12.0))
     @Getter
+    @Input(type = InputType.I, address = @Address(12.0))
     private BooleanInput forwardButton;
 
-    @Input(type = InputType.I, bitAddress = @BitAddress(12.0))
     @Getter
+    @Input(type = InputType.I, address = @Address(12.0))
     private BooleanInput backwardButton;
 
-    @Input(type = InputType.I, bitAddress = @BitAddress(12.1))
     @Getter
+    @Input(type = InputType.I, address = @Address(12.1))
     private BooleanInput stopButton;
 }

@@ -1,7 +1,7 @@
 package com.h8.os7.interfaces;
 
+import com.h8.os7.core.common.annotation.address.Address;
 import com.h8.os7.core.common.annotation.component.Interface;
-import com.h8.os7.core.common.annotation.address.BitAddress;
 import com.h8.os7.core.input.annotation.Input;
 import com.h8.os7.core.input.impl.BooleanInput;
 import com.h8.os7.core.input.type.InputType;
@@ -13,23 +13,23 @@ import lombok.Getter;
 
 @Interface("exampleActuatorInterface")
 public class ExampleActuatorInterface implements ActuatorInterface {
-    @Input(type = InputType.I, bitAddress = @BitAddress(10.0))
     @Getter
+    @Input(type = InputType.I, address = @Address(10.0))
     private BooleanInput minPosition;
 
-    @Input(type = InputType.I, bitAddress = @BitAddress(10.1))
     @Getter
+    @Input(type = InputType.I, address = @Address(10.1))
     private BooleanInput maxPosition;
 
-    @Input(type = InputType.I, bitAddress = @BitAddress(10.2))
     @Getter
+    @Input(type = InputType.I, address = @Address(10.2))
     private BooleanInput movementLocked;
 
-    @Output(type = OutputType.A, bitAddress = @BitAddress(10.0))
     @Getter
+    @Output(type = OutputType.A, address = @Address(10.0))
     private BooleanOutput forwardMovement;
 
-    @Output(type = OutputType.A, bitAddress = @BitAddress(10.1))
     @Getter
+    @Output(type = OutputType.A, address = @Address(10.1))
     private BooleanOutput backwardMovement;
 }

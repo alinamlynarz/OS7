@@ -2,6 +2,7 @@ package com.h8.os7.devices;
 
 import com.h8.os7.core.common.annotation.component.Component;
 import com.h8.os7.core.common.annotation.dependency.Runner;
+import com.h8.os7.core.common.types.RunnerType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +32,7 @@ public class Actuator {
         mode = Mode.STOP;
     }
 
-    @Runner
+    @Runner(RunnerType.OB1)
     public void run() {
         handleActuatorMovement();
     }
@@ -42,12 +43,12 @@ public class Actuator {
 
         switch (mode) {
             case FORWARD:
-                if (!i.getMaxPosition().isSet()) {
+                if (!i.getMaxPosition().get()) {
                     i.getForwardMovement().set(true);
                 }
                 break;
             case BACKWARD:
-                if (!i.getMinPosition().isSet()) {
+                if (!i.getMinPosition().get()) {
                     i.getBackwardMovement().set(true);
                 }
                 break;

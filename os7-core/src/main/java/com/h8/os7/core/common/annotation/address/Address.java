@@ -1,5 +1,5 @@
 package com.h8.os7.core.common.annotation.address;
 
-public @interface WordAddress {
-    int value();
+public @interface Address {
+    double value();
 }

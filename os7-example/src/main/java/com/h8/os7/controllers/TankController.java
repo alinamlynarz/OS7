@@ -3,6 +3,7 @@ package com.h8.os7.controllers;
 import com.h8.os7.core.common.annotation.component.Controller;
 import com.h8.os7.core.common.annotation.dependency.Runner;
 import com.h8.os7.core.common.annotation.dependency.Use;
+import com.h8.os7.core.common.types.RunnerType;
 import com.h8.os7.interfaces.ExampleTankLevelInterface;
 
 @Controller("tankController")
@@ -13,16 +14,16 @@ public class TankController {
     @Use
     ExampleTankLevelInterface exampleTankLevelInterface;
 
-    @Runner
+    @Runner(RunnerType.OB1)
     public void run() {
         handleTankIndication();
     }
 
     private void handleTankIndication() {
-        boolean warningLevelReached = exampleTankLevelInterface.getLevelSensor().getValue() > WARNING_LEVEL;
+        Boolean warningLevelReached = exampleTankLevelInterface.getLevelSensor().get() > WARNING_LEVEL;
         exampleTankLevelInterface.getYellowLevelLamp().set(warningLevelReached);
 
-        boolean alarmLevelReached = exampleTankLevelInterface.getLevelSensor().getValue() > ALARM_LEVEL;
+        Boolean alarmLevelReached = exampleTankLevelInterface.getLevelSensor().get() > ALARM_LEVEL;
         exampleTankLevelInterface.getRedLevelLamp().set(alarmLevelReached);
     }
 }
