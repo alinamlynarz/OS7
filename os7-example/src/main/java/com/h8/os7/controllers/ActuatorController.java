@@ -25,7 +25,7 @@ public class ActuatorController {
     }
 
     private void handleExampleActuator() {
-        actuator.setInterlock(true);
+        actuator.setInterlock(exampleActuatorInterface.getMovementLocked().isSet());
 
         if (exampleControlDeskInterface.getForwardButton().isSet()) {
             actuator.moveForward();

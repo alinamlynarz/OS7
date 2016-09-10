@@ -21,6 +21,10 @@ public class ExampleActuatorInterface implements ActuatorInterface {
     @Getter
     private BooleanInput maxPosition;
 
+    @Input(type = InputType.I, bitAddress = @BitAddress(10.2))
+    @Getter
+    private BooleanInput movementLocked;
+
     @Output(type = OutputType.A, bitAddress = @BitAddress(10.0))
     @Getter
     private BooleanOutput forwardMovement;

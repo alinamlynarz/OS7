@@ -4,4 +4,8 @@ public class WordInput {
     public int getValue() {
         return 0;
     }
+
+    public void onValueChanged(Runnable callback) {
+
+    }
 }
