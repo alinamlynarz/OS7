@@ -12,14 +12,14 @@ import lombok.Getter;
 public class ExampleTankLevelInterface {
     @Getter
     @Input(type = InputType.I, address = @Address(22))
-    WordInput levelSensor;
+    private WordInput levelSensor;
 
     @Getter
     @Output(type = OutputType.A, address = @Address(20.0))
-    BooleanOutput yellowLevelLamp;
+    private BooleanOutput yellowLevelLamp;
 
 
     @Getter
     @Output(type = OutputType.A, address = @Address(20.1))
-    BooleanOutput redLevelLamp;
+    private BooleanOutput redLevelLamp;
 }
