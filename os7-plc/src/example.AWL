@@ -1,27 +1,4 @@
-FUNCTION "FunctionTest" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_INPUT
-  I1 : BOOL ;	
-  I2 : BOOL ;	
-END_VAR
-VAR_OUTPUT
-  Q1 : BOOL ;	
-END_VAR
-BEGIN
-NETWORK
-TITLE =Test
-
-
-
-      A     #I1; 
-      AN    #I2; 
-      =     #Q1; 
-END_FUNCTION
-
-ORGANIZATION_BLOCK "Cycle Execution"
+ORGANIZATION_BLOCK OB 1
 TITLE = "Main Program Sweep (Cycle)"
 VERSION : 0.1
 
@@ -42,16 +19,10 @@ BEGIN
 NETWORK
 TITLE =
 
-      A     I      0.0; 
-      A     I      0.1; 
-      =     Q      0.0; 
-NETWORK
-TITLE =
+      A     I     10.0; 
+      A     I     10.1; 
+      =     Q     10.1; 
 
-      CALL "FunctionTest" (
-           I1                       := I      0.2,
-           I2                       := I      0.3,
-           Q1                       := Q      0.2);
 
 END_ORGANIZATION_BLOCK
 
