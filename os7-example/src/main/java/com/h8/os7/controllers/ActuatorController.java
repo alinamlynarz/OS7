@@ -1,10 +1,10 @@
 package com.h8.os7.controllers;
 
-import com.h8.os7.core.common.annotation.component.Controller;
-import com.h8.os7.core.common.annotation.dependency.Instantiate;
-import com.h8.os7.core.common.annotation.dependency.Runner;
-import com.h8.os7.core.common.annotation.dependency.Use;
-import com.h8.os7.core.common.types.RunnerType;
+import com.h8.os7.core.annotations.components.structure.Controller;
+import com.h8.os7.core.annotations.dependency.Instantiate;
+import com.h8.os7.core.annotations.dependency.Runner;
+import com.h8.os7.core.annotations.dependency.Use;
+import com.h8.os7.core.types.RunnerType;
 import com.h8.os7.devices.Actuator;
 import com.h8.os7.interfaces.ExampleActuatorInterface;
 import com.h8.os7.interfaces.ExampleControlDeskInterface;

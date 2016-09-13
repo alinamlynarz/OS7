@@ -1,10 +1,10 @@
 package com.h8.os7.interfaces;
 
-import com.h8.os7.core.common.annotation.address.Address;
-import com.h8.os7.core.common.annotation.component.Interface;
-import com.h8.os7.core.input.annotation.Input;
-import com.h8.os7.core.input.impl.BooleanInput;
-import com.h8.os7.core.input.type.InputType;
+import com.h8.os7.core.annotations.components.address.Address;
+import com.h8.os7.core.annotations.components.structure.Interface;
+import com.h8.os7.core.annotations.components.peripheries.Input;
+import com.h8.os7.components.input.impl.BooleanInput;
+import com.h8.os7.core.types.InputType;
 import lombok.Getter;
 
 @Interface("controlDeskInterface")

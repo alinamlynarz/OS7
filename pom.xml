@@ -10,6 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>os7-core</module>
+        <module>os7-basic-components</module>
+        <module>os7-compiler</module>
         <module>os7-example</module>
     </modules>
 

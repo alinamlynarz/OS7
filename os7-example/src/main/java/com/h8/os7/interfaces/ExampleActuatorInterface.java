@@ -1,13 +1,13 @@
 package com.h8.os7.interfaces;
 
-import com.h8.os7.core.common.annotation.address.Address;
-import com.h8.os7.core.common.annotation.component.Interface;
-import com.h8.os7.core.input.annotation.Input;
-import com.h8.os7.core.input.impl.BooleanInput;
-import com.h8.os7.core.input.type.InputType;
-import com.h8.os7.core.output.annotation.Output;
-import com.h8.os7.core.output.impl.BooleanOutput;
-import com.h8.os7.core.output.type.OutputType;
+import com.h8.os7.core.annotations.components.address.Address;
+import com.h8.os7.core.annotations.components.structure.Interface;
+import com.h8.os7.core.annotations.components.peripheries.Input;
+import com.h8.os7.components.input.impl.BooleanInput;
+import com.h8.os7.core.types.InputType;
+import com.h8.os7.core.annotations.components.peripheries.Output;
+import com.h8.os7.components.output.impl.BooleanOutput;
+import com.h8.os7.core.types.OutputType;
 import com.h8.os7.devices.ActuatorInterface;
 import lombok.Getter;
 
