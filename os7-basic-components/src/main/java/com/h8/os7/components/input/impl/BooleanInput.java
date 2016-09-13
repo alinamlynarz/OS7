@@ -2,7 +2,7 @@ package com.h8.os7.components.input.impl;
 
 import com.h8.os7.components.input.Input;
 import com.h8.os7.core.annotations.dependency.Runner;
-import com.h8.os7.core.interfaces.Callback;
+import com.h8.os7.components.common.Callback;
 import com.h8.os7.core.types.RunnerType;
 
 /**

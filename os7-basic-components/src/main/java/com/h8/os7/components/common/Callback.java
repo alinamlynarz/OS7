@@ -1,4 +1,4 @@
-package com.h8.os7.core.interfaces;
+package com.h8.os7.components.common;
 
 /**
  * Generic functional interface for callback methods.
