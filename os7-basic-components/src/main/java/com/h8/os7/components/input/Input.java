@@ -1,23 +1,18 @@
 package com.h8.os7.components.input;
 
+import com.h8.os7.core.annotations.dependency.Runner;
 import com.h8.os7.core.interfaces.Callback;
-import com.h8.os7.core.interfaces.Periphery;
+import com.h8.os7.components.common.Periphery;
+import com.h8.os7.core.types.RunnerType;
 
 /**
  * Input periphery component
  * @param <T>
  *     Generic type adequate to S7 type
  */
-public abstract class Input<T> implements Periphery<T> {
-    private T value;
-
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
+public abstract class Input<T> extends Periphery<T> {
+    protected T oldValue;
+    protected Boolean onValueChanged;
 
     /**
      * Getter of input value
@@ -34,4 +29,10 @@ public abstract class Input<T> implements Periphery<T> {
      *      Method to be called when event occurs
      */
     public void onValueChanged(Callback<T> callback) {}
+
+    @Runner(RunnerType.OB1)
+    protected void evaluate() {
+        onValueChanged = !value.equals(oldValue);
+        oldValue = value;
+    }
 }

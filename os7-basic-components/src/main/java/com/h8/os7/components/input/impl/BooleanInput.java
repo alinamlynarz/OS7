@@ -1,12 +1,17 @@
 package com.h8.os7.components.input.impl;
 
 import com.h8.os7.components.input.Input;
+import com.h8.os7.core.annotations.dependency.Runner;
 import com.h8.os7.core.interfaces.Callback;
+import com.h8.os7.core.types.RunnerType;
 
 /**
  * Boolean input periphery component
  */
 public class BooleanInput extends Input<Boolean> {
+    protected Boolean onPositiveEdge;
+    protected Boolean onNegativeEdge;
+
     /**
      * An event handler can be defined at positive edge
      * @param callback
@@ -20,4 +25,12 @@ public class BooleanInput extends Input<Boolean> {
      *      Method to be called when event occurs
      */
     public void onNegativeEdge(Callback<Boolean> callback) {}
+
+    @Override
+    @Runner(RunnerType.OB1)
+    protected void evaluate() {
+        onPositiveEdge = value != oldValue && value && !onPositiveEdge;
+        onNegativeEdge = value != oldValue && !value && !onNegativeEdge;
+        super.evaluate();
+    }
 }
