@@ -29,8 +29,8 @@ public class BooleanInput extends Input<Boolean> {
     @Override
     @Runner(RunnerType.OB1)
     protected void evaluate() {
-        onPositiveEdge = value != oldValue && value && !onPositiveEdge;
-        onNegativeEdge = value != oldValue && !value && !onNegativeEdge;
+        onPositiveEdge = value && !oldValue && !onPositiveEdge;
+        onNegativeEdge = !value && oldValue && !onNegativeEdge ;
         super.evaluate();
     }
 }
