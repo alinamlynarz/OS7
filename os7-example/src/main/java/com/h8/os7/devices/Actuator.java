@@ -1,12 +1,10 @@
 package com.h8.os7.devices;
 
-import com.h8.os7.core.annotations.components.structure.Component;
 import com.h8.os7.core.annotations.dependency.Injectable;
 import com.h8.os7.core.annotations.dependency.Runner;
 import com.h8.os7.core.types.RunnerType;
 import lombok.Setter;
 
-@Component("actuatorHandler")
 public class Actuator {
     @Setter
     private boolean interlock;
