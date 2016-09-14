@@ -1,24 +1,20 @@
 package com.h8.os7.devices;
 
 import com.h8.os7.core.annotations.components.structure.Component;
+import com.h8.os7.core.annotations.dependency.Injectable;
 import com.h8.os7.core.annotations.dependency.Runner;
 import com.h8.os7.core.types.RunnerType;
-import lombok.Getter;
 import lombok.Setter;
 
 @Component("actuatorHandler")
 public class Actuator {
     @Setter
-    @Getter
     private boolean interlock;
 
     private Mode mode;
 
+    @Injectable
     private ActuatorInterface i;
-
-    public Actuator(ActuatorInterface i) {
-        this.i = i;
-    }
 
     public void moveForward() {
         mode = Mode.FORWARD;
@@ -41,6 +37,12 @@ public class Actuator {
         i.getBackwardMovement().set(false);
         i.getForwardMovement().set(false);
 
+        if (!interlock) {
+            handleActuatorMode();
+        }
+    }
+
+    private void handleActuatorMode() {
         switch (mode) {
             case FORWARD:
                 if (!i.getMaxPosition().get()) {

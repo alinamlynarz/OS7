@@ -1,6 +1,7 @@
 package com.h8.os7.controllers;
 
 import com.h8.os7.core.annotations.components.structure.Controller;
+import com.h8.os7.core.annotations.dependency.Inject;
 import com.h8.os7.core.annotations.dependency.Instantiate;
 import com.h8.os7.core.annotations.dependency.Runner;
 import com.h8.os7.core.annotations.dependency.Use;
@@ -18,7 +19,8 @@ public class ActuatorController {
     ExampleControlDeskInterface exampleControlDeskInterface;
 
     @Instantiate
-    Actuator actuator = new Actuator(exampleActuatorInterface);
+    @Inject("exampleActuatorInterface")
+    Actuator actuator;
 
     @Runner(RunnerType.OB1)
     public void run() {
