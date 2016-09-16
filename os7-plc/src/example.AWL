@@ -1,7 +1,19 @@
+TYPE "POINTER"
+VERSION : 0.1
+
+
+  STRUCT 	
+   DBNO : INT ;	
+   START : INT ;	
+   LENGTH : INT ;	
+  END_STRUCT ;	
+END_TYPE
+
 TYPE "BOOLEAN_INPUT"
 
 
   STRUCT 	
+   P : "POINTER";	
    VALUE : BOOL ;	
    OLD_VALUE : BOOL ;	
    ON_VALUE_CHANGED : BOOL ;	
@@ -14,6 +26,7 @@ TYPE "BOOLEAN_OUTPUT"
 
 
   STRUCT 	
+   P : "POINTER";	
    VALUE : BOOL ;	
   END_STRUCT ;	
 END_TYPE
@@ -23,6 +36,8 @@ VERSION : 0.1
 
 
   STRUCT 	
+   P : "POINTER";	
+   P_I : "POINTER";	
    INTERLOCK : BOOL ;	
    MODE : WORD ;	//enum Mode: 0 - UNDEFINED, 1 - FORWARD, 2 - BACKWARD, 3 - STOP
   END_STRUCT ;	
@@ -33,6 +48,7 @@ VERSION : 0.1
 
 
   STRUCT 	
+   P : "POINTER";	
    MIN_POSITION : "BOOLEAN_INPUT";	//private BooleanInput minPosition;
    MAX_POSITION : "BOOLEAN_INPUT";	//private BooleanInput maxPosition;
    MOVEMENT_LOCKED : "BOOLEAN_INPUT";	//private BooleanInput movementLocked;
@@ -46,9 +62,22 @@ VERSION : 0.1
 
 
   STRUCT 	
+   P : "POINTER";	
    FORWARD_BUTTON : "BOOLEAN_INPUT";	//private BooleanInput forwardButton;
    BACKWARD_BUTTON : "BOOLEAN_INPUT";	//private BooleanInput backwardButton;
    STOP_BUTTON : "BOOLEAN_INPUT";	//private BooleanInput stopButton;
+  END_STRUCT ;	
+END_TYPE
+
+TYPE "ACTUATOR_CONTROLLER"
+VERSION : 0.1
+
+
+  STRUCT 	
+   P : "POINTER";	
+   P_EXAMPLE_ACTUATOR_INTER : "POINTER";	
+   P_EXAMPLE_CONTROL_DESK_I : "POINTER";	
+   ACTUATOR : "ACTUATOR";	
   END_STRUCT ;	
 END_TYPE
 
@@ -62,39 +91,611 @@ VERSION : 0.1
    EXAMPLE_CONTROL_DESK_INT : "EXAMPLE_CONTROL_DESK_INT";	//@Interface("exampleControlDeskInterface")
   END_STRUCT ;	
 BEGIN
+   EXAMPLE_ACTUATOR_INTERFA.P.DBNO := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.P.START := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.P.LENGTH := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.P.DBNO := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.P.START := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.P.LENGTH := 0; 
    EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.VALUE := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.OLD_VALUE := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.ON_VALUE_CHANGED := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.ON_POSITIVE_EDGE := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.ON_NEGATIVE_EDGE := FALSE; 
+   EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.P.DBNO := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.P.START := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.P.LENGTH := 0; 
    EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.VALUE := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.OLD_VALUE := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.ON_VALUE_CHANGED := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.ON_POSITIVE_EDGE := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.ON_NEGATIVE_EDGE := FALSE; 
+   EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.P.DBNO := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.P.START := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.P.LENGTH := 0; 
    EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.VALUE := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.OLD_VALUE := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.ON_VALUE_CHANGED := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.ON_POSITIVE_EDGE := FALSE; 
    EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.ON_NEGATIVE_EDGE := FALSE; 
+   EXAMPLE_ACTUATOR_INTERFA.FORWARD_MOVEMENT.P.DBNO := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.FORWARD_MOVEMENT.P.START := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.FORWARD_MOVEMENT.P.LENGTH := 0; 
    EXAMPLE_ACTUATOR_INTERFA.FORWARD_MOVEMENT.VALUE := FALSE; 
+   EXAMPLE_ACTUATOR_INTERFA.BACKWARD_MOVEMENT.P.DBNO := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.BACKWARD_MOVEMENT.P.START := 0; 
+   EXAMPLE_ACTUATOR_INTERFA.BACKWARD_MOVEMENT.P.LENGTH := 0; 
    EXAMPLE_ACTUATOR_INTERFA.BACKWARD_MOVEMENT.VALUE := FALSE; 
+   EXAMPLE_CONTROL_DESK_INT.P.DBNO := 0; 
+   EXAMPLE_CONTROL_DESK_INT.P.START := 0; 
+   EXAMPLE_CONTROL_DESK_INT.P.LENGTH := 0; 
+   EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.P.DBNO := 0; 
+   EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.P.START := 0; 
+   EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.P.LENGTH := 0; 
    EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.VALUE := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.OLD_VALUE := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.ON_VALUE_CHANGED := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.ON_POSITIVE_EDGE := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.ON_NEGATIVE_EDGE := FALSE; 
+   EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.P.DBNO := 0; 
+   EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.P.START := 0; 
+   EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.P.LENGTH := 0; 
    EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.VALUE := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.OLD_VALUE := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.ON_VALUE_CHANGED := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.ON_POSITIVE_EDGE := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.ON_NEGATIVE_EDGE := FALSE; 
+   EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.P.DBNO := 0; 
+   EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.P.START := 0; 
+   EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.P.LENGTH := 0; 
    EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.VALUE := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.OLD_VALUE := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.ON_VALUE_CHANGED := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.ON_POSITIVE_EDGE := FALSE; 
    EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.ON_NEGATIVE_EDGE := FALSE; 
 END_DATA_BLOCK
+
+DATA_BLOCK "CONTROLLERS"
+TITLE =
+VERSION : 0.1
+
+
+  STRUCT 	
+   ACTUATOR_CONTROLLER : "ACTUATOR_CONTROLLER";	//@Controller("actuatorController")
+  END_STRUCT ;	
+BEGIN
+   ACTUATOR_CONTROLLER.P.DBNO := 0; 
+   ACTUATOR_CONTROLLER.P.START := 0; 
+   ACTUATOR_CONTROLLER.P.LENGTH := 0; 
+   ACTUATOR_CONTROLLER.P_EXAMPLE_ACTUATOR_INTER.DBNO := 0; 
+   ACTUATOR_CONTROLLER.P_EXAMPLE_ACTUATOR_INTER.START := 0; 
+   ACTUATOR_CONTROLLER.P_EXAMPLE_ACTUATOR_INTER.LENGTH := 0; 
+   ACTUATOR_CONTROLLER.P_EXAMPLE_CONTROL_DESK_I.DBNO := 0; 
+   ACTUATOR_CONTROLLER.P_EXAMPLE_CONTROL_DESK_I.START := 0; 
+   ACTUATOR_CONTROLLER.P_EXAMPLE_CONTROL_DESK_I.LENGTH := 0; 
+   ACTUATOR_CONTROLLER.ACTUATOR.P.DBNO := 0; 
+   ACTUATOR_CONTROLLER.ACTUATOR.P.START := 0; 
+   ACTUATOR_CONTROLLER.ACTUATOR.P.LENGTH := 0; 
+   ACTUATOR_CONTROLLER.ACTUATOR.P_I.DBNO := 0; 
+   ACTUATOR_CONTROLLER.ACTUATOR.P_I.START := 0; 
+   ACTUATOR_CONTROLLER.ACTUATOR.P_I.LENGTH := 0; 
+   ACTUATOR_CONTROLLER.ACTUATOR.INTERLOCK := FALSE; 
+   ACTUATOR_CONTROLLER.ACTUATOR.MODE := W#16#0; 
+END_DATA_BLOCK
+
+FUNCTION "BOOLEAN_INPUT_GET" : BOOL
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  THIS : "BOOLEAN_INPUT";	
+END_VAR
+BEGIN
+NETWORK
+TITLE =IMPL
+//return this.value;
+      A     #THIS.VALUE; 
+      =     #RET_VAL; 
+END_FUNCTION
+
+FUNCTION "BOOLEAN_OUTPUT_SET" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_INPUT
+  VALUE : BOOL ;	
+END_VAR
+VAR_IN_OUT
+  THIS : "BOOLEAN_OUTPUT";	
+END_VAR
+BEGIN
+NETWORK
+TITLE =IMPL
+//this.value = value
+      A     #VALUE; 
+      =     #THIS.VALUE; 
+END_FUNCTION
+
+FUNCTION "ACTUATOR_MOVE_FORWARD" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  THIS : "ACTUATOR";	
+END_VAR
+BEGIN
+NETWORK
+TITLE =IMPL
+//mode = Mode.FORWARD;
+      L     1; 
+      T     #THIS.MODE; 
+END_FUNCTION
+
+FUNCTION "ACTUATOR_MOVE_BACKWARD" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  THIS : "ACTUATOR";	
+END_VAR
+BEGIN
+NETWORK
+TITLE =IMPL
+//mode = Mode.BACKWARD;
+      L     1; 
+      T     #THIS.MODE; 
+END_FUNCTION
+
+FUNCTION "ACTUATOR_STOP" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  THIS : "ACTUATOR";	
+END_VAR
+BEGIN
+NETWORK
+TITLE =IMPL
+//mode = Mode.STOP;
+      L     3; 
+      T     #THIS.MODE; 
+END_FUNCTION
+
+FUNCTION "ACTUATOR_SET_INTERLOCK" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_INPUT
+  INTERLOCK : BOOL ;	
+END_VAR
+VAR_IN_OUT
+  THIS : "ACTUATOR";	
+END_VAR
+BEGIN
+NETWORK
+TITLE =IMPL
+//@Setter private boolean interlock;
+      A     #INTERLOCK; 
+      =     #THIS.INTERLOCK; 
+END_FUNCTION
+
+FUNCTION "POINTER_CREATE" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_INPUT
+  DBNO : INT ;	
+  START : INT ;	
+  LENGTH : INT ;	
+END_VAR
+VAR_IN_OUT
+  P : "POINTER";	
+END_VAR
+BEGIN
+NETWORK
+TITLE =IMPL
+
+      L     #DBNO; 
+      T     #P.DBNO; 
+      L     #START; 
+      T     #P.START; 
+      L     #LENGTH; 
+      T     #P.LENGTH; 
+END_FUNCTION
+
+FUNCTION "ACTUATOR_HANDLE_ACT_MOVE" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  THIS : "ACTUATOR";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _P_I : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR";	
+  _I : "EXAMPLE_ACTUATOR_INTERFA";	
+END_VAR
+BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     P##_P_I; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P_I.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P_I.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P_I.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_I,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_I);
+
+NETWORK
+TITLE =IMPL
+//i.getBackwardMovement().set(false);
+      CALL "BOOLEAN_OUTPUT_SET" (
+           VALUE                    := FALSE,
+           THIS                     := #_I.FORWARD_MOVEMENT);
+
+NETWORK
+TITLE =IMPL
+//i.getForwardMovement().set(false);
+      CALL "BOOLEAN_OUTPUT_SET" (
+           VALUE                    := FALSE,
+           THIS                     := #_I.BACKWARD_MOVEMENT);
+
+NETWORK
+TITLE =IMPL
+//if (!interlock) { handleActuatorMode(); }
+      A     #_THIS.INTERLOCK; 
+      JCN   ELSE; 
+
+
+
+ELSE: CLR   ; 
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_I,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_I);
+
+END_FUNCTION
+
+FUNCTION "ACTUATOR_CONTROLLER_HAND" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  THIS : "ACTUATOR_CONTROLLER";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _P_EXAMPLE_ACTUATOR_INTE : ANY ;	
+  _P_EXAMPLE_CONTROL_DESK : ANY ;	
+  _P_ACTUATOR : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR_CONTROLLER";	
+  _EXAMPLE_ACTUATOR_INTERF : "EXAMPLE_ACTUATOR_INTERFA";	
+  _EXAMPLE_CONTROL_DESK_IN : "EXAMPLE_CONTROL_DESK_INT";	
+  _ACTUATOR : "ACTUATOR";	
+  _T1 : BOOL ;	
+  _T2 : BOOL ;	
+  _T3 : BOOL ;	
+  _T4 : BOOL ;	
+END_VAR
+BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     P##_P_EXAMPLE_ACTUATOR_INTE; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     P##_P_EXAMPLE_CONTROL_DESK; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     P##_P_ACTUATOR; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.ACTUATOR.P.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.ACTUATOR.P.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.ACTUATOR.P.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_EXAMPLE_ACTUATOR_INTE,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_EXAMPLE_ACTUATOR_INTERF);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_EXAMPLE_CONTROL_DESK,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_EXAMPLE_CONTROL_DESK_IN);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_ACTUATOR,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_ACTUATOR);
+
+NETWORK
+TITLE =IMPL
+//actuator.setInterlock(exampleActuatorInterface.getMovementLocked().get())
+      CALL "BOOLEAN_INPUT_GET" (
+           RET_VAL                  := #_T1,
+           THIS                     := #_EXAMPLE_ACTUATOR_INTERF.MOVEMENT_LOCKED);
+
+      CALL "ACTUATOR_SET_INTERLOCK" (
+           INTERLOCK                := #_T1,
+           THIS                     := #_ACTUATOR);
+
+
+NETWORK
+TITLE =IMPL
+//if (exampleControlDeskInterface.getForwardButton().get()) { 
+//actuator.moveForward() }
+      CALL "BOOLEAN_INPUT_GET" (
+           RET_VAL                  := #_T2,
+           THIS                     := #_EXAMPLE_CONTROL_DESK_IN.FORWARD_BUTTON);
+
+      A     #_T2; 
+      JCN   ELS1; 
+
+      CALL "ACTUATOR_MOVE_FORWARD" (
+           THIS                     := #_ACTUATOR);
+
+ELS1: CLR   ; 
+NETWORK
+TITLE =IMPL
+//if (exampleControlDeskInterface.getBackwardButton().get()) { 
+//actuator.moveBackward() }
+      CALL "BOOLEAN_INPUT_GET" (
+           RET_VAL                  := #_T3,
+           THIS                     := #_EXAMPLE_CONTROL_DESK_IN.BACKWARD_BUTTON);
+
+      A     #_T3; 
+      JCN   ELS2; 
+
+      CALL "ACTUATOR_MOVE_BACKWARD" (
+           THIS                     := #_ACTUATOR);
+
+ELS2: CLR   ; 
+NETWORK
+TITLE =IMPL
+//if (exampleControlDeskInterface.getStopButton().get()) { 
+//actuator.stop() }
+      CALL "BOOLEAN_INPUT_GET" (
+           RET_VAL                  := #_T4,
+           THIS                     := #_EXAMPLE_CONTROL_DESK_IN.STOP_BUTTON);
+
+      A     #_T4; 
+      JCN   ELS3; 
+
+      CALL "ACTUATOR_STOP" (
+           THIS                     := #_ACTUATOR);
+
+ELS3: CLR   ; 
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_EXAMPLE_ACTUATOR_INTERF,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_EXAMPLE_ACTUATOR_INTE);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_EXAMPLE_CONTROL_DESK_IN,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_EXAMPLE_CONTROL_DESK);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_ACTUATOR,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_ACTUATOR);
+
+END_FUNCTION
+
+FUNCTION "POINTERS" : VOID
+TITLE =
+VERSION : 0.1
+
+BEGIN
+NETWORK
+TITLE =IMPL
+//class ExampleActuatorInterface
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 0,
+           LENGTH                   := 46,
+           P                        := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 6,
+           LENGTH                   := 8,
+           P                        := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 14,
+           LENGTH                   := 8,
+           P                        := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 22,
+           LENGTH                   := 8,
+           P                        := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 30,
+           LENGTH                   := 8,
+           P                        := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.FORWARD_MOVEMENT.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 38,
+           LENGTH                   := 8,
+           P                        := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.BACKWARD_MOVEMENT.P);
+
+
+NETWORK
+TITLE =IMPL
+//class ExampleControlDeskInterface
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 46,
+           LENGTH                   := 30,
+           P                        := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 52,
+           LENGTH                   := 8,
+           P                        := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 60,
+           LENGTH                   := 8,
+           P                        := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1001,
+           START                    := 68,
+           LENGTH                   := 8,
+           P                        := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.P);
+
+
+NETWORK
+TITLE =IMPL
+//class ActuatorController
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1002,
+           START                    := 0,
+           LENGTH                   := 34,
+           P                        := "CONTROLLERS".ACTUATOR_CONTROLLER.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.P.DBNO,
+           START                    := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.P.START,
+           LENGTH                   := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.P.LENGTH,
+           P                        := "CONTROLLERS".ACTUATOR_CONTROLLER.P_EXAMPLE_ACTUATOR_INTER);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.P.DBNO,
+           START                    := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.P.START,
+           LENGTH                   := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.P.LENGTH,
+           P                        := "CONTROLLERS".ACTUATOR_CONTROLLER.P_EXAMPLE_CONTROL_DESK_I);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := 1002,
+           START                    := 18,
+           LENGTH                   := 18,
+           P                        := "CONTROLLERS".ACTUATOR_CONTROLLER.ACTUATOR.P);
+
+      CALL "POINTER_CREATE" (
+           DBNO                     := "CONTROLLERS".ACTUATOR_CONTROLLER.P_EXAMPLE_ACTUATOR_INTER.DBNO,
+           START                    := "CONTROLLERS".ACTUATOR_CONTROLLER.P_EXAMPLE_ACTUATOR_INTER.START,
+           LENGTH                   := "CONTROLLERS".ACTUATOR_CONTROLLER.P_EXAMPLE_ACTUATOR_INTER.LENGTH,
+           P                        := "CONTROLLERS".ACTUATOR_CONTROLLER.ACTUATOR.P_I);
+
+END_FUNCTION
 
 FUNCTION "INPUTS" : VOID
 TITLE =
@@ -110,6 +711,16 @@ TITLE =IMPL
       =     "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.VALUE; 
       A     I     10.2; 
       =     "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.VALUE; 
+NETWORK
+TITLE =IMPL
+
+      A     I     12.0; 
+      =     "INTERFACES".EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.VALUE; 
+      A     I     12.1; 
+      =     "INTERFACES".EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.VALUE; 
+      A     I     12.2; 
+      =     "INTERFACES".EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.VALUE; 
+
 END_FUNCTION
 
 FUNCTION "OUTPUTS" : VOID
@@ -127,45 +738,12 @@ TITLE =IMPL
 
 END_FUNCTION
 
-FUNCTION "BOOLEAN_INPUT_GET" : BOOL
-TITLE =
-VERSION : 0.1
-
-
-VAR_INPUT
-  THIS : "BOOLEAN_INPUT";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//return this.value;
-      A     #THIS.VALUE; 
-      =     #RET_VAL; 
-END_FUNCTION
-
-FUNCTION "BOOLEAN_OUTPUT_SET" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_INPUT
-  THIS : "BOOLEAN_OUTPUT";	
-  VALUE : BOOL ;	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//this.value = value
-      A     #VALUE; 
-      =     #THIS.VALUE; 
-END_FUNCTION
-
 FUNCTION "BOOLEAN_INPUT_EVALUATE" : VOID
 TITLE =
 VERSION : 0.1
 
 
-VAR_INPUT
+VAR_IN_OUT
   THIS : "BOOLEAN_INPUT";	
 END_VAR
 BEGIN
@@ -202,66 +780,83 @@ TITLE =IMPL
       =     #THIS.OLD_VALUE; 
 END_FUNCTION
 
-FUNCTION "ACTUATOR_MOVE_FORWARD" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_INPUT
-  THIS : "ACTUATOR";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//mode = Mode.FORWARD;
-      L     1; 
-      T     #THIS.MODE; 
-END_FUNCTION
-
-FUNCTION "ACTUATOR_MOVE_BACKWARD" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_INPUT
-  THIS : "ACTUATOR";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//mode = Mode.BACKWARD;
-      L     1; 
-      T     #THIS.MODE; 
-END_FUNCTION
-
-FUNCTION "ACTUATOR_STOP" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_INPUT
-  THIS : "ACTUATOR";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//mode = Mode.STOP;
-      L     3; 
-      T     #THIS.MODE; 
-END_FUNCTION
-
 FUNCTION "ACTUATOR_RUN" : VOID
 TITLE =
 VERSION : 0.1
 
-BEGIN
-END_FUNCTION
 
-FUNCTION "ACTUATOR_HANDLE_ACT_MOVE" : VOID
-TITLE =
-VERSION : 0.1
-
+VAR_IN_OUT
+  THIS : "ACTUATOR";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _P_I : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR";	
+  _I : "EXAMPLE_ACTUATOR_INTERFA";	
+END_VAR
 BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     P##_P_I; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P_I.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P_I.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P_I.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_I,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_I);
+
+NETWORK
+TITLE =IMPL
+//handleActuatorMOvement();
+      CALL "ACTUATOR_HANDLE_ACT_MOVE" (
+           THIS                     := #_THIS);
+
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_I,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_I);
+
 END_FUNCTION
 
 FUNCTION "ACTUATOR_HANDLE_ACT_MODE" : VOID
@@ -269,32 +864,103 @@ TITLE =
 VERSION : 0.1
 
 
-VAR_INPUT
+VAR_IN_OUT
   THIS : "ACTUATOR";	
 END_VAR
 VAR_TEMP
+  _P_THIS : ANY ;	
+  _P_I : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR";	
+  _I : "EXAMPLE_ACTUATOR_INTERFA";	
   _T1 : BOOL ;	
   _T2 : BOOL ;	
+  _T3 : BOOL ;	
+  _T4 : BOOL ;	
 END_VAR
 BEGIN
 NETWORK
+TITLE =GET ANY POINTER
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     P##_P_I; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P_I.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P_I.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P_I.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_I,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_I);
+
+NETWORK
 TITLE =IMPL
 //case FORWARD:
-      L     #THIS.MODE; 
+      L     #_THIS.MODE; 
       L     1; 
       ==I   ; 
       JCN   END1; 
 
 //case FORWARD:
 
+      CALL "BOOLEAN_INPUT_GET" (
+           RET_VAL                  := #_T1,
+           THIS                     := #_I.MAX_POSITION);
+
+      AN    #_T1; 
+      =     #_T2; 
+
+      CALL "BOOLEAN_OUTPUT_SET" (
+           VALUE                    := #_T2,
+           THIS                     := #_I.FORWARD_MOVEMENT);
+
       JU    END; 
 
-      L     #THIS.MODE; 
+      L     #_THIS.MODE; 
       L     2; 
       ==I   ; 
       JCN   END2; 
 
 //case BACKWARD:
+
+      CALL "BOOLEAN_INPUT_GET" (
+           RET_VAL                  := #_T3,
+           THIS                     := #_I.MIN_POSITION);
+
+      AN    #_T3; 
+      =     #_T4; 
+
+      CALL "BOOLEAN_OUTPUT_SET" (
+           VALUE                    := #_T4,
+           THIS                     := #_I.BACKWARD_MOVEMENT);
 
       JU    END; 
 
@@ -303,24 +969,148 @@ TITLE =IMPL
 END2: CLR   ; 
 END1: CLR   ; 
 END:  CLR   ; 
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_I,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_I);
 
 END_FUNCTION
 
-FUNCTION "ACTUATOR_SET_INTERLOCK" : VOID
+FUNCTION "ACTUATOR_CONTROLLER_RUN" : VOID
 TITLE =
 VERSION : 0.1
 
 
-VAR_INPUT
-  THIS : "ACTUATOR";	
-  INTERLOCK : BOOL ;	
+VAR_IN_OUT
+  THIS : "ACTUATOR_CONTROLLER";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _P_EXAMPLE_ACTUATOR_INTE : ANY ;	
+  _P_EXAMPLE_CONTROL_DESK : ANY ;	
+  _P_ACTUATOR : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR_CONTROLLER";	
+  _EXAMPLE_ACTUATOR_INTERF : "EXAMPLE_ACTUATOR_INTERFA";	
+  _EXAMPLE_CONTROL_DESK_IN : "EXAMPLE_CONTROL_DESK_INT";	
+  _ACTUATOR : "ACTUATOR";	
 END_VAR
 BEGIN
 NETWORK
+TITLE =GET ANY POINTER
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     P##_P_EXAMPLE_ACTUATOR_INTE; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     P##_P_EXAMPLE_CONTROL_DESK; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     P##_P_ACTUATOR; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #THIS.ACTUATOR.P.DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #THIS.ACTUATOR.P.START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #THIS.ACTUATOR.P.LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_EXAMPLE_ACTUATOR_INTE,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_EXAMPLE_ACTUATOR_INTERF);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_EXAMPLE_CONTROL_DESK,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_EXAMPLE_CONTROL_DESK_IN);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_ACTUATOR,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_ACTUATOR);
+
+NETWORK
 TITLE =IMPL
-//@Setter private boolean interlock;
-      A     #INTERLOCK; 
-      =     #THIS.INTERLOCK; 
+
+      CALL "ACTUATOR_CONTROLLER_HAND" (
+           THIS                     := #_THIS);
+
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_EXAMPLE_ACTUATOR_INTERF,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_EXAMPLE_ACTUATOR_INTE);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_EXAMPLE_CONTROL_DESK_IN,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_EXAMPLE_CONTROL_DESK);
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_ACTUATOR,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_ACTUATOR);
+
 END_FUNCTION
 
 ORGANIZATION_BLOCK OB 1
@@ -343,6 +1133,12 @@ VAR_TEMP
 END_VAR
 BEGIN
 NETWORK
+TITLE =POINTERS
+
+      CALL "POINTERS" ;
+
+
+NETWORK
 TITLE =INPUTS
 
       CALL "INPUTS" ;
@@ -350,18 +1146,7 @@ TITLE =INPUTS
 
 NETWORK
 TITLE =IMPL
-
-      CALL "BOOLEAN_INPUT_GET" (
-           THIS                     := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION,
-           RET_VAL                  := #_T);
-
-      CALL "BOOLEAN_OUTPUT_SET" (
-           THIS                     := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.FORWARD_MOVEMENT,
-           VALUE                    := #_T);
-
-NETWORK
-TITLE =IMPL
-
+//@Inputs
       CALL "BOOLEAN_INPUT_EVALUATE" (
            THIS                     := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION);
       CALL "BOOLEAN_INPUT_EVALUATE" (
@@ -374,6 +1159,18 @@ TITLE =IMPL
            THIS                     := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON);
       CALL "BOOLEAN_INPUT_EVALUATE" (
            THIS                     := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON);
+
+NETWORK
+TITLE =IMPL
+//@Controllers
+      CALL "ACTUATOR_CONTROLLER_RUN" (
+           THIS                     := "CONTROLLERS".ACTUATOR_CONTROLLER);
+
+NETWORK
+TITLE =IMPL
+//@Components
+      CALL "ACTUATOR_RUN" (
+           THIS                     := "CONTROLLERS".ACTUATOR_CONTROLLER.ACTUATOR);
 
 NETWORK
 TITLE =OUTPUTS
