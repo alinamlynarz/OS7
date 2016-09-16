@@ -182,7 +182,7 @@ BEGIN
    ACTUATOR_CONTROLLER.ACTUATOR.P_I.START := L#0; 
    ACTUATOR_CONTROLLER.ACTUATOR.P_I.LENGTH := 0; 
    ACTUATOR_CONTROLLER.ACTUATOR.INTERLOCK := FALSE; 
-   ACTUATOR_CONTROLLER.ACTUATOR.MODE := W#16#0; 
+   ACTUATOR_CONTROLLER.ACTUATOR.MODE := W#16#64; 
 END_DATA_BLOCK
 
 FUNCTION "BOOLEAN_INPUT_GET" : BOOL
@@ -191,137 +191,28 @@ VERSION : 0.1
 
 
 VAR_IN_OUT
-  THIS : "BOOLEAN_INPUT";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//return this.value;
-      A     #THIS.VALUE; 
-      =     #RET_VAL; 
-END_FUNCTION
-
-FUNCTION "BOOLEAN_OUTPUT_SET" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_INPUT
-  VALUE : BOOL ;	
-END_VAR
-VAR_IN_OUT
-  THIS : "BOOLEAN_OUTPUT";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//this.value = value
-      A     #VALUE; 
-      =     #THIS.VALUE; 
-END_FUNCTION
-
-FUNCTION "ACTUATOR_MOVE_FORWARD" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_IN_OUT
-  THIS : "ACTUATOR";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//mode = Mode.FORWARD;
-      L     1; 
-      T     #THIS.MODE; 
-END_FUNCTION
-
-FUNCTION "ACTUATOR_MOVE_BACKWARD" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_IN_OUT
-  THIS : "ACTUATOR";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//mode = Mode.BACKWARD;
-      L     1; 
-      T     #THIS.MODE; 
-END_FUNCTION
-
-FUNCTION "ACTUATOR_STOP" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_IN_OUT
-  THIS : "ACTUATOR";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//mode = Mode.STOP;
-      L     3; 
-      T     #THIS.MODE; 
-END_FUNCTION
-
-FUNCTION "ACTUATOR_HANDLE_ACT_MODE" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_IN_OUT
-  THIS : "ACTUATOR";	
+  P : "POINTER";	
 END_VAR
 VAR_TEMP
   _P_THIS : ANY ;	
-  _P_I : ANY ;	
   _RET_VAL : INT ;	
-  _THIS : "ACTUATOR";	
-  _I : "EXAMPLE_ACTUATOR_INTERFA";	
+  _THIS : "BOOLEAN_OUTPUT";	
   _DBNO : INT ;	
   _START : DINT ;	
   _LENGTH : INT ;	
-  _T1 : BOOL ;	
-  _T2 : BOOL ;	
-  _T3 : BOOL ;	
-  _T4 : BOOL ;	
 END_VAR
 BEGIN
 NETWORK
 TITLE =GET ANY POINTER
 
-      L     #THIS.P.DBNO; 
+      L     #P.DBNO; 
       T     #_DBNO; 
-      L     #THIS.P.START; 
+      L     #P.START; 
       T     #_START; 
-      L     #THIS.P.LENGTH; 
+      L     #P.LENGTH; 
       T     #_LENGTH; 
 
       L     P##_P_THIS; // load parameter type any
-      LAR1  ; // load accu1 content to AR1
-      L     W#16#1002; // load data format of parameter type any
-      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
-      L     #_DBNO; // get source DB NO.
-      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
-      L     #_START; // get start address
-      SLD   3; // translate to byte address 
-      OD    DW#16#84000000; // force the memory area as DB
-      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
-      L     #_LENGTH; // get repeatition factor
-      T     LW [AR1,P#2.0]; 
-
-      L     #THIS.P_I.DBNO; 
-      T     #_DBNO; 
-      L     #THIS.P_I.START; 
-      T     #_START; 
-      L     #THIS.P_I.LENGTH; 
-      T     #_LENGTH; 
-
-      L     P##_P_I; // load parameter type any
       LAR1  ; // load accu1 content to AR1
       L     W#16#1002; // load data format of parameter type any
       T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
@@ -341,6 +232,351 @@ TITLE =IMPORT THIS
            RET_VAL                  := #_RET_VAL,
            DSTBLK                   := #_THIS);
 
+NETWORK
+TITLE =IMPL
+//return this.value;
+      A     #_THIS.VALUE; 
+      =     #RET_VAL; 
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+END_FUNCTION
+
+FUNCTION "BOOLEAN_OUTPUT_SET" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_INPUT
+  VALUE : BOOL ;	
+END_VAR
+VAR_IN_OUT
+  P : "POINTER";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "BOOLEAN_OUTPUT";	
+  _DBNO : INT ;	
+  _START : DINT ;	
+  _LENGTH : INT ;	
+END_VAR
+BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #P.DBNO; 
+      T     #_DBNO; 
+      L     #P.START; 
+      T     #_START; 
+      L     #P.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+NETWORK
+TITLE =IMPL
+//this.value = value
+      A     #VALUE; 
+      =     #_THIS.VALUE; 
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+END_FUNCTION
+
+FUNCTION "ACTUATOR_MOVE_FORWARD" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  P : "POINTER";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR";	
+  _DBNO : INT ;	
+  _START : DINT ;	
+  _LENGTH : INT ;	
+END_VAR
+BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #P.DBNO; 
+      T     #_DBNO; 
+      L     #P.START; 
+      T     #_START; 
+      L     #P.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+NETWORK
+TITLE =IMPL
+//mode = Mode.FORWARD;
+      L     1; 
+      T     #_THIS.MODE; 
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+END_FUNCTION
+
+FUNCTION "ACTUATOR_MOVE_BACKWARD" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  P : "POINTER";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR";	
+  _DBNO : INT ;	
+  _START : DINT ;	
+  _LENGTH : INT ;	
+END_VAR
+BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #P.DBNO; 
+      T     #_DBNO; 
+      L     #P.START; 
+      T     #_START; 
+      L     #P.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+NETWORK
+TITLE =IMPL
+//mode = Mode.BACKWARD;
+      L     2; 
+      T     #_THIS.MODE; 
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+END_FUNCTION
+
+FUNCTION "ACTUATOR_STOP" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  P : "POINTER";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR";	
+  _DBNO : INT ;	
+  _START : DINT ;	
+  _LENGTH : INT ;	
+END_VAR
+BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #P.DBNO; 
+      T     #_DBNO; 
+      L     #P.START; 
+      T     #_START; 
+      L     #P.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+NETWORK
+TITLE =IMPL
+//mode = Mode.STOP;
+      L     3; 
+      T     #_THIS.MODE; 
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+END_FUNCTION
+
+FUNCTION "ACTUATOR_HANDLE_ACT_MODE" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  P : "POINTER";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _P_I : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR";	
+  _I : "EXAMPLE_ACTUATOR_INTERFA";	
+  _DBNO : INT ;	
+  _START : DINT ;	
+  _LENGTH : INT ;	
+  _T1 : BOOL ;	
+  _T2 : BOOL ;	
+  _T3 : BOOL ;	
+  _T4 : BOOL ;	
+END_VAR
+BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #P.DBNO; 
+      T     #_DBNO; 
+      L     #P.START; 
+      T     #_START; 
+      L     #P.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #_THIS.P_I.DBNO; 
+      T     #_DBNO; 
+      L     #_THIS.P_I.START; 
+      T     #_START; 
+      L     #_THIS.P_I.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_I; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+NETWORK
+TITLE =IMPORT THIS
+
       CALL "BLKMOV" (
            SRCBLK                   := #_P_I,
            RET_VAL                  := #_RET_VAL,
@@ -358,16 +594,19 @@ TITLE =IMPL
 
       CALL "BOOLEAN_INPUT_GET" (
            RET_VAL                  := #_T1,
-           THIS                     := #_I.MAX_POSITION);
+           P                        := #_I.MAX_POSITION.P);
 
       AN    #_T1; 
+      AN    #_THIS.INTERLOCK; 
       =     #_T2; 
 
       CALL "BOOLEAN_OUTPUT_SET" (
            VALUE                    := #_T2,
-           THIS                     := #_I.FORWARD_MOVEMENT);
+           P                        := #_I.FORWARD_MOVEMENT.P);
 
       JU    END; 
+
+END1: CLR   ; 
 
       L     #_THIS.MODE; 
       L     2; 
@@ -378,35 +617,23 @@ TITLE =IMPL
 
       CALL "BOOLEAN_INPUT_GET" (
            RET_VAL                  := #_T3,
-           THIS                     := #_I.MIN_POSITION);
+           P                        := #_I.MIN_POSITION.P);
 
       AN    #_T3; 
+      AN    #_THIS.INTERLOCK; 
       =     #_T4; 
 
       CALL "BOOLEAN_OUTPUT_SET" (
            VALUE                    := #_T4,
-           THIS                     := #_I.BACKWARD_MOVEMENT);
+           P                        := #_I.BACKWARD_MOVEMENT.P);
 
       JU    END; 
 
+END2: CLR   ; 
+
 //default:
 
-END2: CLR   ; 
-END1: CLR   ; 
 END:  CLR   ; 
-NETWORK
-TITLE =EXPORT THIS
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_THIS,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_THIS);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_I,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_I);
-
 END_FUNCTION
 
 FUNCTION "ACTUATOR_SET_INTERLOCK" : VOID
@@ -418,14 +645,60 @@ VAR_INPUT
   INTERLOCK : BOOL ;	
 END_VAR
 VAR_IN_OUT
-  THIS : "ACTUATOR";	
+  P : "POINTER";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR";	
+  _DBNO : INT ;	
+  _START : DINT ;	
+  _LENGTH : INT ;	
 END_VAR
 BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #P.DBNO; 
+      T     #_DBNO; 
+      L     #P.START; 
+      T     #_START; 
+      L     #P.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_THIS; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+NETWORK
+TITLE =IMPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
 NETWORK
 TITLE =IMPL
 //@Setter private boolean interlock;
       A     #INTERLOCK; 
-      =     #THIS.INTERLOCK; 
+      =     #_THIS.INTERLOCK; 
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
 END_FUNCTION
 
 FUNCTION "POINTER_CREATE" : VOID
@@ -459,7 +732,7 @@ VERSION : 0.1
 
 
 VAR_IN_OUT
-  THIS : "ACTUATOR";	
+  P : "POINTER";	
 END_VAR
 VAR_TEMP
   _P_THIS : ANY ;	
@@ -475,11 +748,11 @@ BEGIN
 NETWORK
 TITLE =GET ANY POINTER
 
-      L     #THIS.P.DBNO; 
+      L     #P.DBNO; 
       T     #_DBNO; 
-      L     #THIS.P.START; 
+      L     #P.START; 
       T     #_START; 
-      L     #THIS.P.LENGTH; 
+      L     #P.LENGTH; 
       T     #_LENGTH; 
 
       L     P##_P_THIS; // load parameter type any
@@ -494,12 +767,22 @@ TITLE =GET ANY POINTER
       T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
       L     #_LENGTH; // get repeatition factor
       T     LW [AR1,P#2.0]; 
+NETWORK
+TITLE =IMPORT THIS
 
-      L     #THIS.P_I.DBNO; 
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #_THIS.P_I.DBNO; 
       T     #_DBNO; 
-      L     #THIS.P_I.START; 
+      L     #_THIS.P_I.START; 
       T     #_START; 
-      L     #THIS.P_I.LENGTH; 
+      L     #_THIS.P_I.LENGTH; 
       T     #_LENGTH; 
 
       L     P##_P_I; // load parameter type any
@@ -519,11 +802,6 @@ NETWORK
 TITLE =IMPORT THIS
 
       CALL "BLKMOV" (
-           SRCBLK                   := #_P_THIS,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_THIS);
-
-      CALL "BLKMOV" (
            SRCBLK                   := #_P_I,
            RET_VAL                  := #_RET_VAL,
            DSTBLK                   := #_I);
@@ -533,37 +811,20 @@ TITLE =IMPL
 //i.getBackwardMovement().set(false);
       CALL "BOOLEAN_OUTPUT_SET" (
            VALUE                    := FALSE,
-           THIS                     := #_I.FORWARD_MOVEMENT);
+           P                        := #_I.FORWARD_MOVEMENT.P);
 
 NETWORK
 TITLE =IMPL
 //i.getForwardMovement().set(false);
       CALL "BOOLEAN_OUTPUT_SET" (
            VALUE                    := FALSE,
-           THIS                     := #_I.BACKWARD_MOVEMENT);
+           P                        := #_I.BACKWARD_MOVEMENT.P);
 
 NETWORK
 TITLE =IMPL
-//if (!interlock) { handleActuatorMode(); }
-      AN    #_THIS.INTERLOCK; 
-      JCN   ELSE; 
-
+//handleActuatorMode();
       CALL "ACTUATOR_HANDLE_ACT_MODE" (
-           THIS                     := #_THIS);
-
-ELSE: CLR   ; 
-NETWORK
-TITLE =EXPORT THIS
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_THIS,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_THIS);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_I,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_I);
+           P                        := #_THIS.P);
 
 END_FUNCTION
 
@@ -573,7 +834,7 @@ VERSION : 0.1
 
 
 VAR_IN_OUT
-  THIS : "ACTUATOR_CONTROLLER";	
+  P : "POINTER";	
 END_VAR
 VAR_TEMP
   _P_THIS : ANY ;	
@@ -597,74 +858,14 @@ BEGIN
 NETWORK
 TITLE =GET ANY POINTER
 
-      L     #THIS.P.DBNO; 
+      L     #P.DBNO; 
       T     #_DBNO; 
-      L     #THIS.P.START; 
+      L     #P.START; 
       T     #_START; 
-      L     #THIS.P.LENGTH; 
+      L     #P.LENGTH; 
       T     #_LENGTH; 
 
       L     P##_P_THIS; // load parameter type any
-      LAR1  ; // load accu1 content to AR1
-      L     W#16#1002; // load data format of parameter type any
-      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
-      L     #_DBNO; // get source DB NO.
-      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
-      L     #_START; // get start address
-      SLD   3; // translate to byte address 
-      OD    DW#16#84000000; // force the memory area as DB
-      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
-      L     #_LENGTH; // get repeatition factor
-      T     LW [AR1,P#2.0]; 
-
-      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.DBNO; 
-      T     #_DBNO; 
-      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.START; 
-      T     #_START; 
-      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.LENGTH; 
-      T     #_LENGTH; 
-
-      L     P##_P_EXAMPLE_ACTUATOR_INTE; // load parameter type any
-      LAR1  ; // load accu1 content to AR1
-      L     W#16#1002; // load data format of parameter type any
-      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
-      L     #_DBNO; // get source DB NO.
-      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
-      L     #_START; // get start address
-      SLD   3; // translate to byte address 
-      OD    DW#16#84000000; // force the memory area as DB
-      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
-      L     #_LENGTH; // get repeatition factor
-      T     LW [AR1,P#2.0]; 
-
-      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.DBNO; 
-      T     #_DBNO; 
-      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.START; 
-      T     #_START; 
-      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.LENGTH; 
-      T     #_LENGTH; 
-
-      L     P##_P_EXAMPLE_CONTROL_DESK; // load parameter type any
-      LAR1  ; // load accu1 content to AR1
-      L     W#16#1002; // load data format of parameter type any
-      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
-      L     #_DBNO; // get source DB NO.
-      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
-      L     #_START; // get start address
-      SLD   3; // translate to byte address 
-      OD    DW#16#84000000; // force the memory area as DB
-      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
-      L     #_LENGTH; // get repeatition factor
-      T     LW [AR1,P#2.0]; 
-
-      L     #THIS.ACTUATOR.P.DBNO; 
-      T     #_DBNO; 
-      L     #THIS.ACTUATOR.P.START; 
-      T     #_START; 
-      L     #THIS.ACTUATOR.P.LENGTH; 
-      T     #_LENGTH; 
-
-      L     P##_P_ACTUATOR; // load parameter type any
       LAR1  ; // load accu1 content to AR1
       L     W#16#1002; // load data format of parameter type any
       T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
@@ -684,6 +885,72 @@ TITLE =IMPORT THIS
            SRCBLK                   := #_P_THIS,
            RET_VAL                  := #_RET_VAL,
            DSTBLK                   := #_THIS);
+
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #_THIS.P_EXAMPLE_ACTUATOR_INTER.DBNO; 
+      T     #_DBNO; 
+      L     #_THIS.P_EXAMPLE_ACTUATOR_INTER.START; 
+      T     #_START; 
+      L     #_THIS.P_EXAMPLE_ACTUATOR_INTER.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_EXAMPLE_ACTUATOR_INTE; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     #_THIS.P_EXAMPLE_CONTROL_DESK_I.DBNO; 
+      T     #_DBNO; 
+      L     #_THIS.P_EXAMPLE_CONTROL_DESK_I.START; 
+      T     #_START; 
+      L     #_THIS.P_EXAMPLE_CONTROL_DESK_I.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_EXAMPLE_CONTROL_DESK; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+      L     #_THIS.ACTUATOR.P.DBNO; 
+      T     #_DBNO; 
+      L     #_THIS.ACTUATOR.P.START; 
+      T     #_START; 
+      L     #_THIS.ACTUATOR.P.LENGTH; 
+      T     #_LENGTH; 
+
+      L     P##_P_ACTUATOR; // load parameter type any
+      LAR1  ; // load accu1 content to AR1
+      L     W#16#1002; // load data format of parameter type any
+      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
+      L     #_DBNO; // get source DB NO.
+      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
+      L     #_START; // get start address
+      SLD   3; // translate to byte address 
+      OD    DW#16#84000000; // force the memory area as DB
+      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
+      L     #_LENGTH; // get repeatition factor
+      T     LW [AR1,P#2.0]; 
+
+NETWORK
+TITLE =IMPORT THIS
 
       CALL "BLKMOV" (
            SRCBLK                   := #_P_EXAMPLE_ACTUATOR_INTE,
@@ -705,12 +972,11 @@ TITLE =IMPL
 //actuator.setInterlock(exampleActuatorInterface.getMovementLocked().get())
       CALL "BOOLEAN_INPUT_GET" (
            RET_VAL                  := #_T1,
-           THIS                     := #_EXAMPLE_ACTUATOR_INTERF.MOVEMENT_LOCKED);
+           P                        := #_EXAMPLE_ACTUATOR_INTERF.MOVEMENT_LOCKED.P);
 
       CALL "ACTUATOR_SET_INTERLOCK" (
            INTERLOCK                := #_T1,
-           THIS                     := #_ACTUATOR);
-
+           P                        := #_ACTUATOR.P);
 
 NETWORK
 TITLE =IMPL
@@ -718,13 +984,13 @@ TITLE =IMPL
 //actuator.moveForward() }
       CALL "BOOLEAN_INPUT_GET" (
            RET_VAL                  := #_T2,
-           THIS                     := #_EXAMPLE_CONTROL_DESK_IN.FORWARD_BUTTON);
+           P                        := #_EXAMPLE_CONTROL_DESK_IN.FORWARD_BUTTON.P);
 
       A     #_T2; 
       JCN   ELS1; 
 
       CALL "ACTUATOR_MOVE_FORWARD" (
-           THIS                     := #_ACTUATOR);
+           P                        := #_ACTUATOR.P);
 
 ELS1: CLR   ; 
 NETWORK
@@ -733,13 +999,13 @@ TITLE =IMPL
 //actuator.moveBackward() }
       CALL "BOOLEAN_INPUT_GET" (
            RET_VAL                  := #_T3,
-           THIS                     := #_EXAMPLE_CONTROL_DESK_IN.BACKWARD_BUTTON);
+           P                        := #_EXAMPLE_CONTROL_DESK_IN.BACKWARD_BUTTON.P);
 
       A     #_T3; 
       JCN   ELS2; 
 
       CALL "ACTUATOR_MOVE_BACKWARD" (
-           THIS                     := #_ACTUATOR);
+           P                        := #_ACTUATOR.P);
 
 ELS2: CLR   ; 
 NETWORK
@@ -748,38 +1014,15 @@ TITLE =IMPL
 //actuator.stop() }
       CALL "BOOLEAN_INPUT_GET" (
            RET_VAL                  := #_T4,
-           THIS                     := #_EXAMPLE_CONTROL_DESK_IN.STOP_BUTTON);
+           P                        := #_EXAMPLE_CONTROL_DESK_IN.STOP_BUTTON.P);
 
       A     #_T4; 
       JCN   ELS3; 
 
       CALL "ACTUATOR_STOP" (
-           THIS                     := #_ACTUATOR);
+           P                        := #_ACTUATOR.P);
 
 ELS3: CLR   ; 
-NETWORK
-TITLE =EXPORT THIS
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_THIS,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_THIS);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_EXAMPLE_ACTUATOR_INTERF,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_EXAMPLE_ACTUATOR_INTE);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_EXAMPLE_CONTROL_DESK_IN,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_EXAMPLE_CONTROL_DESK);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_ACTUATOR,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_ACTUATOR);
-
 END_FUNCTION
 
 FUNCTION "POINTERS" : VOID
@@ -937,56 +1180,12 @@ VERSION : 0.1
 
 
 VAR_IN_OUT
-  THIS : "BOOLEAN_INPUT";	
-END_VAR
-BEGIN
-NETWORK
-TITLE =IMPL
-//onPositiveEdge = value && !oldValue && !onPositiveEdge
-      A     #THIS.VALUE; 
-      AN    #THIS.OLD_VALUE; 
-      AN    #THIS.ON_POSITIVE_EDGE; 
-      =     #THIS.ON_POSITIVE_EDGE; 
-NETWORK
-TITLE =IMPL
-//onNegativeEdge = !value && oldValue && !onNegativeEdge 
-      AN    #THIS.VALUE; 
-      A     #THIS.OLD_VALUE; 
-      AN    #THIS.ON_NEGATIVE_EDGE; 
-      =     #THIS.ON_NEGATIVE_EDGE; 
-NETWORK
-TITLE =IMPL
-//onValueVhanged = !value.equals(oldValue)
-      A(    ; 
-      AN    #THIS.VALUE; 
-      A     #THIS.OLD_VALUE; 
-      )     ; 
-      O(    ; 
-      A     #THIS.VALUE; 
-      AN    #THIS.OLD_VALUE; 
-      )     ; 
-      =     #THIS.ON_VALUE_CHANGED; 
-NETWORK
-TITLE =IMPL
-//oldValue = value
-      A     #THIS.VALUE; 
-      =     #THIS.OLD_VALUE; 
-END_FUNCTION
-
-FUNCTION "ACTUATOR_RUN" : VOID
-TITLE =
-VERSION : 0.1
-
-
-VAR_IN_OUT
-  THIS : "ACTUATOR";	
+  P : "POINTER";	
 END_VAR
 VAR_TEMP
   _P_THIS : ANY ;	
-  _P_I : ANY ;	
   _RET_VAL : INT ;	
-  _THIS : "ACTUATOR";	
-  _I : "EXAMPLE_ACTUATOR_INTERFA";	
+  _THIS : "BOOLEAN_INPUT";	
   _DBNO : INT ;	
   _START : DINT ;	
   _LENGTH : INT ;	
@@ -995,11 +1194,11 @@ BEGIN
 NETWORK
 TITLE =GET ANY POINTER
 
-      L     #THIS.P.DBNO; 
+      L     #P.DBNO; 
       T     #_DBNO; 
-      L     #THIS.P.START; 
+      L     #P.START; 
       T     #_START; 
-      L     #THIS.P.LENGTH; 
+      L     #P.LENGTH; 
       T     #_LENGTH; 
 
       L     P##_P_THIS; // load parameter type any
@@ -1014,15 +1213,83 @@ TITLE =GET ANY POINTER
       T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
       L     #_LENGTH; // get repeatition factor
       T     LW [AR1,P#2.0]; 
+NETWORK
+TITLE =IMPORT THIS
 
-      L     #THIS.P_I.DBNO; 
+      CALL "BLKMOV" (
+           SRCBLK                   := #_P_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_THIS);
+
+NETWORK
+TITLE =IMPL
+//onPositiveEdge = value && !oldValue && !onPositiveEdge
+      A     #_THIS.VALUE; 
+      AN    #_THIS.OLD_VALUE; 
+      AN    #_THIS.ON_POSITIVE_EDGE; 
+      =     #_THIS.ON_POSITIVE_EDGE; 
+NETWORK
+TITLE =IMPL
+//onNegativeEdge = !value && oldValue && !onNegativeEdge 
+      AN    #_THIS.VALUE; 
+      A     #_THIS.OLD_VALUE; 
+      AN    #_THIS.ON_NEGATIVE_EDGE; 
+      =     #_THIS.ON_NEGATIVE_EDGE; 
+NETWORK
+TITLE =IMPL
+//onValueVhanged = !value.equals(oldValue)
+      A(    ; 
+      AN    #_THIS.VALUE; 
+      A     #_THIS.OLD_VALUE; 
+      )     ; 
+      O(    ; 
+      A     #_THIS.VALUE; 
+      AN    #_THIS.OLD_VALUE; 
+      )     ; 
+      =     #_THIS.ON_VALUE_CHANGED; 
+NETWORK
+TITLE =IMPL
+//oldValue = value
+      A     #_THIS.VALUE; 
+      =     #_THIS.OLD_VALUE; 
+NETWORK
+TITLE =EXPORT THIS
+
+      CALL "BLKMOV" (
+           SRCBLK                   := #_THIS,
+           RET_VAL                  := #_RET_VAL,
+           DSTBLK                   := #_P_THIS);
+
+END_FUNCTION
+
+FUNCTION "ACTUATOR_RUN" : VOID
+TITLE =
+VERSION : 0.1
+
+
+VAR_IN_OUT
+  P : "POINTER";	
+END_VAR
+VAR_TEMP
+  _P_THIS : ANY ;	
+  _RET_VAL : INT ;	
+  _THIS : "ACTUATOR";	
+  _DBNO : INT ;	
+  _START : DINT ;	
+  _LENGTH : INT ;	
+END_VAR
+BEGIN
+NETWORK
+TITLE =GET ANY POINTER
+
+      L     #P.DBNO; 
       T     #_DBNO; 
-      L     #THIS.P_I.START; 
+      L     #P.START; 
       T     #_START; 
-      L     #THIS.P_I.LENGTH; 
+      L     #P.LENGTH; 
       T     #_LENGTH; 
 
-      L     P##_P_I; // load parameter type any
+      L     P##_P_THIS; // load parameter type any
       LAR1  ; // load accu1 content to AR1
       L     W#16#1002; // load data format of parameter type any
       T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
@@ -1034,7 +1301,6 @@ TITLE =GET ANY POINTER
       T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
       L     #_LENGTH; // get repeatition factor
       T     LW [AR1,P#2.0]; 
-
 NETWORK
 TITLE =IMPORT THIS
 
@@ -1043,29 +1309,11 @@ TITLE =IMPORT THIS
            RET_VAL                  := #_RET_VAL,
            DSTBLK                   := #_THIS);
 
-      CALL "BLKMOV" (
-           SRCBLK                   := #_P_I,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_I);
-
 NETWORK
 TITLE =IMPL
 //handleActuatorMOvement();
       CALL "ACTUATOR_HANDLE_ACT_MOVE" (
-           THIS                     := #_THIS);
-
-NETWORK
-TITLE =EXPORT THIS
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_THIS,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_THIS);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_I,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_I);
+           P                        := #_THIS.P);
 
 END_FUNCTION
 
@@ -1075,18 +1323,12 @@ VERSION : 0.1
 
 
 VAR_IN_OUT
-  THIS : "ACTUATOR_CONTROLLER";	
+  P : "POINTER";	
 END_VAR
 VAR_TEMP
   _P_THIS : ANY ;	
-  _P_EXAMPLE_ACTUATOR_INTE : ANY ;	
-  _P_EXAMPLE_CONTROL_DESK : ANY ;	
-  _P_ACTUATOR : ANY ;	
   _RET_VAL : INT ;	
   _THIS : "ACTUATOR_CONTROLLER";	
-  _EXAMPLE_ACTUATOR_INTERF : "EXAMPLE_ACTUATOR_INTERFA";	
-  _EXAMPLE_CONTROL_DESK_IN : "EXAMPLE_CONTROL_DESK_INT";	
-  _ACTUATOR : "ACTUATOR";	
   _DBNO : INT ;	
   _START : DINT ;	
   _LENGTH : INT ;	
@@ -1095,11 +1337,11 @@ BEGIN
 NETWORK
 TITLE =GET ANY POINTER
 
-      L     #THIS.P.DBNO; 
+      L     #P.DBNO; 
       T     #_DBNO; 
-      L     #THIS.P.START; 
+      L     #P.START; 
       T     #_START; 
-      L     #THIS.P.LENGTH; 
+      L     #P.LENGTH; 
       T     #_LENGTH; 
 
       L     P##_P_THIS; // load parameter type any
@@ -1115,65 +1357,6 @@ TITLE =GET ANY POINTER
       L     #_LENGTH; // get repeatition factor
       T     LW [AR1,P#2.0]; 
 
-      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.DBNO; 
-      T     #_DBNO; 
-      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.START; 
-      T     #_START; 
-      L     #THIS.P_EXAMPLE_ACTUATOR_INTER.LENGTH; 
-      T     #_LENGTH; 
-
-      L     P##_P_EXAMPLE_ACTUATOR_INTE; // load parameter type any
-      LAR1  ; // load accu1 content to AR1
-      L     W#16#1002; // load data format of parameter type any
-      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
-      L     #_DBNO; // get source DB NO.
-      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
-      L     #_START; // get start address
-      SLD   3; // translate to byte address 
-      OD    DW#16#84000000; // force the memory area as DB
-      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
-      L     #_LENGTH; // get repeatition factor
-      T     LW [AR1,P#2.0]; 
-
-      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.DBNO; 
-      T     #_DBNO; 
-      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.START; 
-      T     #_START; 
-      L     #THIS.P_EXAMPLE_CONTROL_DESK_I.LENGTH; 
-      T     #_LENGTH; 
-
-      L     P##_P_EXAMPLE_CONTROL_DESK; // load parameter type any
-      LAR1  ; // load accu1 content to AR1
-      L     W#16#1002; // load data format of parameter type any
-      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
-      L     #_DBNO; // get source DB NO.
-      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
-      L     #_START; // get start address
-      SLD   3; // translate to byte address 
-      OD    DW#16#84000000; // force the memory area as DB
-      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
-      L     #_LENGTH; // get repeatition factor
-      T     LW [AR1,P#2.0]; 
-
-      L     #THIS.ACTUATOR.P.DBNO; 
-      T     #_DBNO; 
-      L     #THIS.ACTUATOR.P.START; 
-      T     #_START; 
-      L     #THIS.ACTUATOR.P.LENGTH; 
-      T     #_LENGTH; 
-
-      L     P##_P_ACTUATOR; // load parameter type any
-      LAR1  ; // load accu1 content to AR1
-      L     W#16#1002; // load data format of parameter type any
-      T     LW [AR1,P#0.0]; // set parameter #POINTE as S7 and data format by byte   
-      L     #_DBNO; // get source DB NO.
-      T     LW [AR1,P#4.0]; // put DB NO. to parameter #POINTER 
-      L     #_START; // get start address
-      SLD   3; // translate to byte address 
-      OD    DW#16#84000000; // force the memory area as DB
-      T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
-      L     #_LENGTH; // get repeatition factor
-      T     LW [AR1,P#2.0]; 
 NETWORK
 TITLE =IMPORT THIS
 
@@ -1182,49 +1365,11 @@ TITLE =IMPORT THIS
            RET_VAL                  := #_RET_VAL,
            DSTBLK                   := #_THIS);
 
-      CALL "BLKMOV" (
-           SRCBLK                   := #_P_EXAMPLE_ACTUATOR_INTE,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_EXAMPLE_ACTUATOR_INTERF);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_P_EXAMPLE_CONTROL_DESK,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_EXAMPLE_CONTROL_DESK_IN);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_P_ACTUATOR,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_ACTUATOR);
-
 NETWORK
 TITLE =IMPL
 
       CALL "ACTUATOR_CONTROLLER_HAND" (
-           THIS                     := #_THIS);
-
-NETWORK
-TITLE =EXPORT THIS
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_THIS,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_THIS);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_EXAMPLE_ACTUATOR_INTERF,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_EXAMPLE_ACTUATOR_INTE);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_EXAMPLE_CONTROL_DESK_IN,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_EXAMPLE_CONTROL_DESK);
-
-      CALL "BLKMOV" (
-           SRCBLK                   := #_ACTUATOR,
-           RET_VAL                  := #_RET_VAL,
-           DSTBLK                   := #_P_ACTUATOR);
+           P                        := #_THIS.P);
 
 END_FUNCTION
 
@@ -1263,29 +1408,29 @@ NETWORK
 TITLE =IMPL
 //@Inputs
       CALL "BOOLEAN_INPUT_EVALUATE" (
-           THIS                     := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION);
+           P                        := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MIN_POSITION.P);
       CALL "BOOLEAN_INPUT_EVALUATE" (
-           THIS                     := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION);
+           P                        := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MAX_POSITION.P);
       CALL "BOOLEAN_INPUT_EVALUATE" (
-           THIS                     := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED);
+           P                        := "INTERFACES".EXAMPLE_ACTUATOR_INTERFA.MOVEMENT_LOCKED.P);
       CALL "BOOLEAN_INPUT_EVALUATE" (
-           THIS                     := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON);
+           P                        := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.FORWARD_BUTTON.P);
       CALL "BOOLEAN_INPUT_EVALUATE" (
-           THIS                     := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON);
+           P                        := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.BACKWARD_BUTTON.P);
       CALL "BOOLEAN_INPUT_EVALUATE" (
-           THIS                     := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON);
+           P                        := "INTERFACES".EXAMPLE_CONTROL_DESK_INT.STOP_BUTTON.P);
 
 NETWORK
 TITLE =IMPL
 //@Controllers
       CALL "ACTUATOR_CONTROLLER_RUN" (
-           THIS                     := "CONTROLLERS".ACTUATOR_CONTROLLER);
+           P                        := "CONTROLLERS".ACTUATOR_CONTROLLER.P);
 
 NETWORK
 TITLE =IMPL
 //@Components
       CALL "ACTUATOR_RUN" (
-           THIS                     := "CONTROLLERS".ACTUATOR_CONTROLLER.ACTUATOR);
+           P                        := "CONTROLLERS".ACTUATOR_CONTROLLER.ACTUATOR.P);
 
 NETWORK
 TITLE =OUTPUTS
