@@ -32,23 +32,20 @@ public class Actuator {
     }
 
     private void handleActuatorMovement() {
-        i.getBackwardMovement().set(false);
         i.getForwardMovement().set(false);
-
-        if (!interlock) {
-            handleActuatorMode();
-        }
+        i.getBackwardMovement().set(false);
+        handleActuatorMode();
     }
 
     private void handleActuatorMode() {
         switch (mode) {
             case FORWARD:
-                if (!i.getMaxPosition().get()) {
+                if (!i.getMaxPosition().get() && !interlock) {
                     i.getForwardMovement().set(true);
                 }
                 break;
             case BACKWARD:
-                if (!i.getMinPosition().get()) {
+                if (!i.getMinPosition().get() && !interlock) {
                     i.getBackwardMovement().set(true);
                 }
                 break;

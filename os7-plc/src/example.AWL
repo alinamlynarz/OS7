@@ -797,7 +797,6 @@ TITLE =GET ANY POINTER
       T     LD [AR1,P#6.0]; // put memory type(DB) to parameter #POINTER 
       L     #_LENGTH; // get repeatition factor
       T     LW [AR1,P#2.0]; 
-
 NETWORK
 TITLE =IMPORT THIS
 
@@ -808,14 +807,14 @@ TITLE =IMPORT THIS
 
 NETWORK
 TITLE =IMPL
-//i.getBackwardMovement().set(false);
+//i.getForwardMovement().set(false);
       CALL "BOOLEAN_OUTPUT_SET" (
            VALUE                    := FALSE,
            P                        := #_I.FORWARD_MOVEMENT.P);
 
 NETWORK
 TITLE =IMPL
-//i.getForwardMovement().set(false);
+//i.getBackwardMovement().set(false);
       CALL "BOOLEAN_OUTPUT_SET" (
            VALUE                    := FALSE,
            P                        := #_I.BACKWARD_MOVEMENT.P);
