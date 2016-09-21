@@ -7,7 +7,7 @@ import java.util.Date;
 public class Logger {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    public static void log(Class sender, String message, String... args) {
+    public static void log(Class sender, String message, Object... args) {
         String formattedMessage = String.format(message, args);
         log(sender, formattedMessage);
     }
