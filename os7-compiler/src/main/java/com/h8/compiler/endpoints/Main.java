@@ -4,7 +4,6 @@ import com.h8.compiler.common.Logger;
 import com.h8.compiler.core.CompilationContext;
 import com.h8.compiler.core.reflection.ClassFileLoader;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 public class Main {
@@ -15,13 +14,13 @@ public class Main {
         ctx = new CompilationContext();
 
         String workingDirectory = getWorkingDirectory(args);
-        Logger.log(Main.class, "Working directory: %1$s", workingDirectory);
+        Logger.log(Main.class, "Working directory: {1}", workingDirectory);
         ctx.setWorkingDirectory(workingDirectory);
 
         try {
-            List<Class> classList = new ClassFileLoader().listAllClasses(workingDirectory + "/target/classes/");
-            Logger.log(Main.class, "Found %1$s classes", classList.size());
-        } catch (MalformedURLException | ClassNotFoundException e) {
+            List<Class> classList = new ClassFileLoader(workingDirectory).listAllClasses();
+            Logger.log(Main.class, "Found {1} classes", classList.size());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

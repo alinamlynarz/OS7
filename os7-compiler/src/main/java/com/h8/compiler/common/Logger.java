@@ -8,13 +8,13 @@ public class Logger {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public static void log(Class sender, String message, Object... args) {
-        String formattedMessage = String.format(message, args);
+        String formattedMessage = StringFormatter.format(message, args);
         log(sender, formattedMessage);
     }
 
     public static void log(Class sender, String message) {
         Date date = new Date();
-        System.out.println(String.format("%1$s [%2$s] : %3$s",
+        System.out.println(StringFormatter.format("{1} [{2}] : {3}",
                 DATE_FORMAT.format(date), sender.getSimpleName(), message));
     }
 }
