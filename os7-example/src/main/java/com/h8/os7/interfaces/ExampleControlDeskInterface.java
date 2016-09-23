@@ -14,10 +14,10 @@ public class ExampleControlDeskInterface {
     private BooleanInput forwardButton;
 
     @Getter
-    @Input(type = InputType.I, address = @Address(12.0))
+    @Input(type = InputType.I, address = @Address(12.1))
     private BooleanInput backwardButton;
 
     @Getter
-    @Input(type = InputType.I, address = @Address(12.1))
+    @Input(type = InputType.I, address = @Address(12.2))
     private BooleanInput stopButton;
 }
