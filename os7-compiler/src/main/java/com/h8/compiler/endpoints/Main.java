@@ -2,27 +2,20 @@ package com.h8.compiler.endpoints;
 
 import com.h8.compiler.common.Logger;
 import com.h8.compiler.core.CompilationContext;
-import com.h8.compiler.core.reflection.ClassFileLoader;
-
-import java.util.List;
+import com.h8.compiler.core.CompilationContextBuilder;
+import com.h8.compiler.core.reflection.ClassAnnotationProcessor;
 
 public class Main {
-    private static CompilationContext ctx;
 
     public static void main(String[] args) {
         Logger.log(Main.class, "Building compilation context:");
-        ctx = new CompilationContext();
 
         String workingDirectory = getWorkingDirectory(args);
-        Logger.log(Main.class, "Working directory: {1}", workingDirectory);
-        ctx.setWorkingDirectory(workingDirectory);
+        CompilationContext ctx = new CompilationContextBuilder()
+                .withWorkingDirectory(workingDirectory)
+                .getContext();
 
-        try {
-            List<Class> classList = new ClassFileLoader(workingDirectory).listAllClasses();
-            Logger.log(Main.class, "Found {1} classes", classList.size());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new ClassAnnotationProcessor().printClassAnnotations(ctx);
     }
 
     private static String getWorkingDirectory(String[] args) {
